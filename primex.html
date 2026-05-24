@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrimeX Delivery Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a0f1e;
+    --navy2: #111827;
+    --blue: #1a56db;
+    --blue-bright: #2563ff;
+    --blue-light: #60a5fa;
+    --white: #f8faff;
+    --gray: #94a3b8;
+    --card-bg: #131c30;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    padding: 18px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(10,15,30,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(37,99,255,0.15);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.6rem; font-weight: 900; letter-spacing: 1px;
+    text-decoration: none; color: var(--white);
+  }
+  .nav-logo span { color: var(--blue-bright); }
+  .nav-logo svg { width: 36px; height: 36px; }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--gray);
+    font-size: .9rem; font-weight: 500; letter-spacing: .5px;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--blue-bright);
+    color: #fff; padding: 10px 24px; border-radius: 6px;
+    font-weight: 600; font-size: .9rem; text-decoration: none;
+    transition: background .2s, transform .15s;
+  }
+  .nav-cta:hover { background: #1d4ed8; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 60px 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 80% 40%, rgba(37,99,255,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 20% 80%, rgba(26,86,219,0.12) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(37,99,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37,99,255,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 620px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(37,99,255,0.15); border: 1px solid rgba(37,99,255,0.4);
+    border-radius: 50px; padding: 6px 16px;
+    font-size: .78rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--blue-light); margin-bottom: 28px;
+    animation: fadeUp .7s ease both;
+  }
+  .hero-badge::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--blue-bright);
+    box-shadow: 0 0 8px var(--blue-bright);
+    animation: pulse 1.8s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-weight: 900; line-height: .95;
+    letter-spacing: -1px; text-transform: uppercase;
+    animation: fadeUp .7s .1s ease both;
+  }
+  h1 em { font-style: italic; color: var(--blue-bright); }
+  .hero-sub {
+    margin-top: 24px; font-size: 1.1rem; color: var(--gray);
+    line-height: 1.7; font-weight: 300; max-width: 480px;
+    animation: fadeUp .7s .2s ease both;
+  }
+  .hero-actions {
+    margin-top: 40px; display: flex; gap: 16px; flex-wrap: wrap;
+    animation: fadeUp .7s .3s ease both;
+  }
+  .btn-primary {
+    background: var(--blue-bright); color: #fff;
+    padding: 16px 36px; border-radius: 8px;
+    font-weight: 700; font-size: 1rem; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 10px;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 0 30px rgba(37,99,255,0.4);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(37,99,255,0.6); }
+  .btn-outline {
+    border: 1px solid rgba(255,255,255,0.25); color: var(--white);
+    padding: 16px 36px; border-radius: 8px;
+    font-weight: 600; font-size: 1rem; text-decoration: none;
+    transition: border-color .2s, background .2s;
+  }
+  .btn-outline:hover { border-color: var(--blue-bright); background: rgba(37,99,255,0.08); }
+
+  .hero-stats {
+    margin-top: 60px; display: flex; gap: 48px;
+    animation: fadeUp .7s .4s ease both;
+  }
+  .stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2.4rem; font-weight: 900; color: var(--white);
+    line-height: 1;
+  }
+  .stat-num span { color: var(--blue-bright); }
+  .stat-label { font-size: .78rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+  .hero-visual {
+    position: absolute; right: 0; top: 0; bottom: 0;
+    width: 50%; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    animation: fadeIn 1s .3s ease both;
+  }
+  .hero-logo-wrap {
+    position: relative;
+    width: 380px; height: 380px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-logo-wrap::before {
+    content: '';
+    position: absolute; inset: -40px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(37,99,255,0.2) 0%, transparent 70%);
+    animation: breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe { 0%,100%{transform:scale(1);opacity:.8} 50%{transform:scale(1.1);opacity:1} }
+
+  .orbit-ring {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(37,99,255,0.2);
+  }
+  .orbit-ring:nth-child(1) { width: 320px; height: 320px; animation: spin 20s linear infinite; }
+  .orbit-ring:nth-child(2) { width: 420px; height: 420px; animation: spin 30s linear infinite reverse; border-style: dashed; }
+  .orbit-dot {
+    position: absolute; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--blue-bright); box-shadow: 0 0 10px var(--blue-bright);
+    top: 0; left: 50%; transform: translateX(-50%) translateY(-4px);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hero-logo-img {
+    width: 280px; position: relative; z-index: 2;
+    filter: drop-shadow(0 0 40px rgba(37,99,255,0.5));
+    animation: float 5s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  /* ── SERVICES ── */
+  section { padding: 100px 60px; }
+  .section-label {
+    font-size: .75rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--blue-bright); font-weight: 600; margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900;
+    text-transform: uppercase; line-height: 1;
+  }
+  .section-title em { font-style: italic; color: var(--blue-bright); }
+
+  .services-grid {
+    margin-top: 60px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  .service-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(37,99,255,0.15);
+    border-radius: 16px; padding: 36px 32px;
+    transition: transform .3s, border-color .3s, box-shadow .3s;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--blue-bright));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .3s;
+  }
+  .service-card:hover { transform: translateY(-6px); border-color: rgba(37,99,255,0.4); box-shadow: 0 20px 60px rgba(37,99,255,0.15); }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-icon {
+    width: 52px; height: 52px; border-radius: 12px;
+    background: rgba(37,99,255,0.15); border: 1px solid rgba(37,99,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px; font-size: 1.5rem;
+  }
+  .service-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.5rem; font-weight: 700; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .service-card p { color: var(--gray); font-size: .92rem; line-height: 1.7; }
+
+  /* ── HOW IT WORKS ── */
+  .how { background: var(--card-bg); }
+  .how-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .steps { margin-top: 48px; display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: flex; gap: 24px; align-items: flex-start;
+    padding: 28px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: background .2s;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 3rem; font-weight: 900; color: rgba(37,99,255,0.25);
+    line-height: 1; min-width: 52px;
+    transition: color .3s;
+  }
+  .step:hover .step-num { color: var(--blue-bright); }
+  .step h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.3rem; font-weight: 700; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .step p { color: var(--gray); font-size: .9rem; line-height: 1.6; }
+
+  .how-graphic {
+    position: relative; display: flex; align-items: center; justify-content: center;
+  }
+  .track-box {
+    background: var(--navy);
+    border: 1px solid rgba(37,99,255,0.25);
+    border-radius: 20px; padding: 32px; width: 100%;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.4);
+  }
+  .track-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+  .track-header h4 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; letter-spacing: 1px; }
+  .track-id { font-size: .78rem; color: var(--blue-light); background: rgba(37,99,255,0.12); padding: 4px 10px; border-radius: 4px; }
+  .track-progress { position: relative; margin: 24px 0; }
+  .track-line {
+    height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px;
+    margin: 0 20px; position: relative; overflow: hidden;
+  }
+  .track-line-fill {
+    position: absolute; left: 0; top: 0; height: 100%; width: 65%;
+    background: linear-gradient(90deg, var(--blue), var(--blue-bright));
+    border-radius: 2px;
+    animation: fillBar 2s ease-out both;
+  }
+  @keyframes fillBar { from{width:0} to{width:65%} }
+  .track-dots { display: flex; justify-content: space-between; margin-top: -10px; }
+  .tdot {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--navy); border: 3px solid rgba(255,255,255,0.15);
+    position: relative; z-index: 1; display: flex; align-items: center; justify-content: center;
+  }
+  .tdot.done { border-color: var(--blue-bright); background: var(--blue-bright); }
+  .tdot.active { border-color: var(--blue-bright); animation: ripple 1.5s infinite; }
+  @keyframes ripple { 0%{box-shadow:0 0 0 0 rgba(37,99,255,0.4)} 100%{box-shadow:0 0 0 12px transparent} }
+  .track-labels { display: flex; justify-content: space-between; margin-top: 10px; }
+  .track-labels span { font-size: .72rem; color: var(--gray); text-align: center; max-width: 60px; }
+  .track-eta {
+    margin-top: 28px; background: rgba(37,99,255,0.1); border-radius: 10px; padding: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid rgba(37,99,255,0.2);
+  }
+  .track-eta .label { font-size: .78rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
+  .track-eta .value { font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--blue-bright); }
+
+  /* ── WHY ── */
+  .why-grid { margin-top: 60px; display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+  .why-card {
+    background: var(--card-bg); border: 1px solid rgba(37,99,255,0.12);
+    border-radius: 14px; padding: 28px 24px; text-align: center;
+    transition: transform .3s, border-color .3s;
+  }
+  .why-card:hover { transform: translateY(-4px); border-color: rgba(37,99,255,0.35); }
+  .why-icon { font-size: 2rem; margin-bottom: 16px; }
+  .why-card h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.2rem; font-weight: 700; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .why-card p { font-size: .86rem; color: var(--gray); line-height: 1.6; }
+
+  /* ── PRICING ── */
+  .pricing { background: var(--card-bg); }
+  .pricing-grid { margin-top: 60px; display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+  .price-card {
+    background: var(--navy); border: 1px solid rgba(37,99,255,0.2);
+    border-radius: 20px; padding: 40px 32px;
+    transition: transform .3s;
+    position: relative;
+  }
+  .price-card.featured {
+    border-color: var(--blue-bright);
+    box-shadow: 0 0 60px rgba(37,99,255,0.2);
+    transform: scale(1.04);
+  }
+  .price-card:hover { transform: translateY(-6px); }
+  .price-card.featured:hover { transform: scale(1.04) translateY(-6px); }
+  .popular-badge {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--blue-bright); color: #fff; font-size: .72rem;
+    font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    padding: 4px 18px; border-radius: 50px;
+  }
+  .plan-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--gray); margin-bottom: 16px;
+  }
+  .plan-price {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 3.5rem; font-weight: 900; line-height: 1;
+    color: var(--white);
+  }
+  .plan-price sup { font-size: 1.5rem; vertical-align: super; color: var(--blue-bright); }
+  .plan-desc { font-size: .85rem; color: var(--gray); margin: 12px 0 28px; line-height: 1.6; }
+  .plan-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+  .plan-features li { display: flex; align-items: center; gap: 10px; font-size: .88rem; color: var(--gray); }
+  .plan-features li::before { content: '✓'; color: var(--blue-bright); font-weight: 700; }
+  .plan-btn {
+    display: block; text-align: center; padding: 14px;
+    border-radius: 8px; font-weight: 700; font-size: .95rem;
+    text-decoration: none; transition: all .2s;
+  }
+  .plan-btn-outline {
+    border: 1px solid rgba(255,255,255,0.2); color: var(--white);
+  }
+  .plan-btn-outline:hover { border-color: var(--blue-bright); color: var(--blue-bright); }
+  .plan-btn-filled {
+    background: var(--blue-bright); color: #fff;
+    box-shadow: 0 0 30px rgba(37,99,255,0.4);
+  }
+  .plan-btn-filled:hover { background: #1d4ed8; }
+
+  /* ── TESTIMONIALS ── */
+  .testi-grid { margin-top: 60px; display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+  .testi-card {
+    background: var(--card-bg); border: 1px solid rgba(37,99,255,0.12);
+    border-radius: 16px; padding: 30px;
+  }
+  .stars { color: #fbbf24; font-size: 1rem; margin-bottom: 16px; letter-spacing: 2px; }
+  .testi-text { font-size: .93rem; color: var(--gray); line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1rem;
+    background: rgba(37,99,255,0.2); border: 1px solid rgba(37,99,255,0.4); color: var(--blue-bright);
+  }
+  .testi-name { font-weight: 600; font-size: .9rem; }
+  .testi-role { font-size: .78rem; color: var(--gray); }
+
+  /* ── CTA ── */
+  .cta {
+    text-align: center; position: relative; overflow: hidden;
+    background: var(--navy);
+  }
+  .cta-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 100% at 50% 100%, rgba(37,99,255,0.2) 0%, transparent 70%);
+  }
+  .cta-inner { position: relative; z-index: 1; }
+  .cta h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2.5rem,6vw,4.5rem); font-weight: 900;
+    text-transform: uppercase; line-height: 1; margin-bottom: 20px;
+  }
+  .cta h2 em { font-style: italic; color: var(--blue-bright); }
+  .cta p { color: var(--gray); font-size: 1rem; max-width: 500px; margin: 0 auto 40px; }
+  .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy2); border-top: 1px solid rgba(37,99,255,0.1);
+    padding: 60px 60px 30px;
+  }
+  .footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+  .footer-brand h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.8rem; font-weight: 900; margin-bottom: 14px;
+  }
+  .footer-brand h3 span { color: var(--blue-bright); }
+  .footer-brand p { font-size: .87rem; color: var(--gray); line-height: 1.7; max-width: 240px; }
+  .footer-col h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 18px;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col a { text-decoration: none; color: rgba(255,255,255,0.6); font-size: .88rem; transition: color .2s; }
+  .footer-col a:hover { color: var(--blue-bright); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.06); padding-top: 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: .8rem; color: var(--gray);
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s, transform .7s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 1024px) {
+    nav { padding: 16px 30px; }
+    section { padding: 70px 30px; }
+    .hero { padding: 120px 30px 70px; }
+    .services-grid, .pricing-grid, .testi-grid { grid-template-columns: 1fr 1fr; }
+    .why-grid { grid-template-columns: 1fr 1fr; }
+    .how-inner { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .services-grid, .pricing-grid, .testi-grid, .why-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-stats { flex-wrap: wrap; gap: 24px; }
+    .price-card.featured { transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg viewBox="0 0 36 36" fill="none">
+      <path d="M6 8h16a8 8 0 010 16H6M6 24l6 6" stroke="url(#g1)" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M2 14h8M2 20h6" stroke="#0a1535" stroke-width="3" stroke-linecap="round"/>
+      <defs><linearGradient id="g1" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop stop-color="#1a56db"/><stop offset="1" stop-color="#2563ff"/></linearGradient></defs>
+    </svg>
+    Prime<span>X</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get a Quote</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">⚡ Express Delivery Now Available</div>
+    <h1>Deliver <em>Faster.</em><br>Deliver <em>Smarter.</em></h1>
+    <p class="hero-sub">PrimeX connects businesses and individuals with lightning-fast, reliable delivery services. Same-day, next-day, and scheduled — we move what matters.</p>
+    <div class="hero-actions">
+      <a href="#services" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1l7 7-7 7M1 8h14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        Our Services
+      </a>
+      <a href="#how" class="btn-outline">Track a Package</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">50<span>K+</span></div>
+        <div class="stat-label">Deliveries Made</div>
+      </div>
+      <div>
+        <div class="stat-num">99<span>%</span></div>
+        <div class="stat-label">On-Time Rate</div>
+      </div>
+      <div>
+        <div class="stat-num">24<span>/7</span></div>
+        <div class="stat-label">Support</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-logo-wrap">
+      <div class="orbit-ring"><div class="orbit-dot"></div></div>
+      <div class="orbit-ring"><div class="orbit-dot"></div></div>
+      <img src="/mnt/user-data/uploads/1000017060.png" alt="PrimeX Logo" class="hero-logo-img">
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">What We Offer</div>
+  <div class="section-title">Our <em>Delivery</em> Services</div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-icon">⚡</div>
+      <h3>Same-Day Express</h3>
+      <p>Order by noon and receive your package the same day. Our express network covers metro areas with guaranteed delivery windows.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">📦</div>
+      <h3>Standard Delivery</h3>
+      <p>Reliable 1–3 business day delivery nationwide. Fully tracked from pickup to your door with real-time notifications.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🏢</div>
+      <h3>Business Solutions</h3>
+      <p>Dedicated logistics support for enterprises. Volume pricing, API integration, and a dedicated account manager.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🌍</div>
+      <h3>International Shipping</h3>
+      <p>Customs-cleared international delivery to 120+ countries. Door-to-door with full tracking and insurance options.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">❄️</div>
+      <h3>Cold Chain Logistics</h3>
+      <p>Temperature-controlled delivery for perishables, pharma, and sensitive goods. Maintained from pickup to drop-off.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">📅</div>
+      <h3>Scheduled Delivery</h3>
+      <p>Choose your exact delivery slot. We deliver when it's convenient for you — mornings, evenings, or weekends.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="how">
+  <div class="how-inner">
+    <div>
+      <div class="section-label">Simple Process</div>
+      <div class="section-title">How It <em>Works</em></div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-num">01</div>
+          <div>
+            <h4>Book Online</h4>
+            <p>Enter pickup and delivery details. Choose your service level and schedule a convenient collection time.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">02</div>
+          <div>
+            <h4>We Collect</h4>
+            <p>Our driver arrives at your door within the agreed window. We handle your package with care from the start.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">03</div>
+          <div>
+            <h4>Live Tracking</h4>
+            <p>Follow your delivery in real time on our app or website. Get SMS and email updates at every milestone.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">04</div>
+          <div>
+            <h4>Delivered</h4>
+            <p>Your package arrives on time. Signature confirmation and photo proof of delivery included.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="how-graphic reveal">
+      <div class="track-box">
+        <div class="track-header">
+          <h4>📍 LIVE TRACKING</h4>
+          <span class="track-id">#PX-48291</span>
+        </div>
+        <div style="font-size:.82rem;color:var(--gray);margin-bottom:20px;">Your package is on its way</div>
+        <div class="track-progress">
+          <div class="track-dots">
+            <div class="tdot done"></div>
+            <div class="tdot done"></div>
+            <div class="tdot active"></div>
+            <div class="tdot"></div>
+          </div>
+          <div class="track-line" style="margin-top:-10px;">
+            <div class="track-line-fill"></div>
+          </div>
+          <div class="track-labels">
+            <span>Collected</span>
+            <span>Sorted</span>
+            <span>In Transit</span>
+            <span>Delivered</span>
+          </div>
+        </div>
+        <div class="track-eta">
+          <div>
+            <div class="label">Estimated Arrival</div>
+            <div class="value" style="color:var(--white);font-size:1rem;margin-top:4px;">Today, 3:30 – 4:00 PM</div>
+          </div>
+          <div style="text-align:right">
+            <div class="label">Time Left</div>
+            <div class="value">1h 24m</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border-radius:8px;padding:12px 14px;">
+          <span style="font-size:1.2rem">🚗</span>
+          <div>
+            <div style="font-size:.82rem;font-weight:600;">Marcus D. — Driver</div>
+            <div style="font-size:.75rem;color:var(--gray);">⭐ 4.97 · 2.3 km away</div>
+          </div>
+          <a href="#" style="margin-left:auto;font-size:.75rem;color:var(--blue-bright);text-decoration:none;font-weight:600;">Message</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY PRIMEX -->
+<section>
+  <div class="section-label">Why Choose Us</div>
+  <div class="section-title">Built for <em>Speed</em> &amp; Reliability</div>
+  <div class="why-grid">
+    <div class="why-card reveal">
+      <div class="why-icon">🛡️</div>
+      <h4>Fully Insured</h4>
+      <p>Every parcel covered up to $10,000. Claims processed within 48 hours.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">📱</div>
+      <h4>Smart App</h4>
+      <p>Book, track, and manage all deliveries from our iOS and Android app.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🌿</div>
+      <h4>Eco Fleet</h4>
+      <p>60% of our urban fleet is electric. Delivering a greener future.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">💬</div>
+      <h4>24/7 Support</h4>
+      <p>Live chat, phone, and email. Real humans ready to help any time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="pricing">
+  <div style="text-align:center">
+    <div class="section-label">Transparent Pricing</div>
+    <div class="section-title">Simple <em>Plans</em></div>
+    <p style="color:var(--gray);margin-top:16px;font-size:.95rem;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7;">No hidden fees. No surprises. Pay only for what you need.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="plan-name">Standard</div>
+      <div class="plan-price"><sup>$</sup>5<span style="font-size:1.5rem;color:var(--gray)">.99</span></div>
+      <p class="plan-desc">Reliable delivery for everyday needs with full tracking.</p>
+      <ul class="plan-features">
+        <li>1–3 Business Day Delivery</li>
+        <li>Real-Time Tracking</li>
+        <li>Up to 10kg</li>
+        <li>Email Notifications</li>
+        <li>Basic Insurance</li>
+      </ul>
+      <a href="#contact" class="plan-btn plan-btn-outline">Get Started</a>
+    </div>
+    <div class="price-card featured reveal">
+      <div class="popular-badge">Most Popular</div>
+      <div class="plan-name">Express</div>
+      <div class="plan-price"><sup>$</sup>12<span style="font-size:1.5rem;color:var(--gray)">.99</span></div>
+      <p class="plan-desc">Same-day and next-day delivery with priority handling.</p>
+      <ul class="plan-features">
+        <li>Same-Day / Next-Day</li>
+        <li>Live GPS Tracking</li>
+        <li>Up to 25kg</li>
+        <li>SMS + Email Alerts</li>
+        <li>$500 Insurance</li>
+        <li>Signature Confirmation</li>
+      </ul>
+      <a href="#contact" class="plan-btn plan-btn-filled">Get Started</a>
+    </div>
+    <div class="price-card reveal">
+      <div class="plan-name">Business</div>
+      <div class="plan-price" style="font-size:2.5rem">Custom</div>
+      <p class="plan-desc">Enterprise-grade logistics for high-volume senders.</p>
+      <ul class="plan-features">
+        <li>Volume Discounts</li>
+        <li>API Integration</li>
+        <li>Dedicated Manager</li>
+        <li>Priority Support 24/7</li>
+        <li>Full Insurance Cover</li>
+        <li>Monthly Invoicing</li>
+      </ul>
+      <a href="#contact" class="plan-btn plan-btn-outline">Contact Sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="section-label">What Clients Say</div>
+  <div class="section-title">Trusted by <em>Thousands</em></div>
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"PrimeX has transformed our e-commerce fulfillment. Deliveries are on time, customers are happy, and the tracking system is seamless."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">SR</div>
+        <div>
+          <div class="testi-name">Sarah R.</div>
+          <div class="testi-role">E-Commerce Store Owner</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"Same-day delivery? I was skeptical. Now I use PrimeX for every urgent order. The live tracking is incredible — I knew exactly where my package was."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">JM</div>
+        <div>
+          <div class="testi-name">James M.</div>
+          <div class="testi-role">Small Business Owner</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"The business plan saved us 30% on logistics costs. The API integration was smooth, and our account manager is always available. Highly recommend."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">LP</div>
+        <div>
+          <div class="testi-name">Lisa P.</div>
+          <div class="testi-role">Operations Director, RetailCo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact" class="cta">
+  <div class="cta-bg"></div>
+  <div class="cta-inner reveal">
+    <div class="section-label" style="text-align:center">Ready to Ship?</div>
+    <h2>Start Delivering <em>Today</em></h2>
+    <p>Join thousands of businesses and individuals who trust PrimeX for fast, reliable, and affordable delivery.</p>
+    <div class="cta-actions">
+      <a href="tel:+18001234567" class="btn-primary">
+        📞 Call Us Free
+      </a>
+      <a href="mailto:hello@primex.delivery" class="btn-outline">✉ Email Us</a>
+    </div>
+    <p style="margin-top:28px;font-size:.8rem;color:var(--gray);">Or visit us: 123 Prime Boulevard, Suite 400 · hello@primex.delivery · 1-800-PRIMEX</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <h3>Prime<span>X</span></h3>
+      <p>Fast, reliable, and smart delivery services for businesses and individuals nationwide.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Same-Day Express</a></li>
+        <li><a href="#">Standard Delivery</a></li>
+        <li><a href="#">International</a></li>
+        <li><a href="#">Cold Chain</a></li>
+        <li><a href="#">Business Solutions</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About PrimeX</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Track a Package</a></li>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Claims</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 PrimeX Delivery Service. All rights reserved.</span>
+    <span>Made with ⚡ for speed</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
