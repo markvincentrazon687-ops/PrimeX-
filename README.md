@@ -1,2 +1,3 @@
-# PrimeX-
-Website Repository Description  “A modern and responsive website created with Claude AI, designed to deliver a clean user experience, fast performance, and mobile-friendly design. Built for creativity, branding, and online presence.”  Short Version  “Responsive website created using Claude AI.”  Professional Version  ”
+
+
+“This project is a fully responsive website developed with the help of Claude AI. It features a modern UI design, mobile optimization, and clean structure suitable for personal brands, businesses, or content creators.
